@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Python Beginner Quiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0f172a;
+        --bg-light: #1e293b;
+        --accent: #38bdf8;
+        --accent-soft: rgba(56, 189, 248, 0.15);
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --border: #1f2937;
+        --danger: #f97373;
+        --success: #4ade80;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 2rem 1rem;
+      }
+
+      .shell {
+        width: 100%;
+        max-width: 960px;
+        background: linear-gradient(145deg, rgba(148, 163, 184, 0.04), rgba(15, 23, 42, 0.9));
+        border-radius: 1.5rem;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        box-shadow:
+          0 24px 60px rgba(15, 23, 42, 0.9),
+          0 0 0 1px rgba(15, 23, 42, 0.8);
+        overflow: hidden;
+        backdrop-filter: blur(18px);
+      }
+
+      .shell-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.24), transparent 55%);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+      }
+
+      .window-dots {
+        display: flex;
+        gap: 0.35rem;
+      }
+
+      .dot {
+        width: 0.7rem;
+        height: 0.7rem;
+        border-radius: 999px;
+      }
+
+      .dot.red { background: #f97373; }
+      .dot.amber { background: #facc15; }
+      .dot.green { background: #4ade80; }
+
+      .shell-title {
+        font-size: 0.8rem;
+        color: var(--muted);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .badge {
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.85);
+        color: var(--accent);
+        font-size: 0.7rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        border: 1px solid rgba(56, 189, 248, 0.45);
+      }
+
+      .badge-dot {
+        width: 0.35rem;
+        height: 0.35rem;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+      }
+
+      .shell-body {
+        padding: 1.75rem 1.75rem 1.5rem;
+      }
+
+      .layout-header {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .headline {
+        font-size: 1.7rem;
+        font-weight: 650;
+        letter-spacing: 0.02em;
+      }
+
+      .headline span {
+        color: var(--accent);
+      }
+
+      .subtitle {
+        color: var(--muted);
+        font-size: 0.95rem;
+        max-width: 40rem;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.25rem;
+      }
+
+      .pill {
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        padding: 0.15rem 0.7rem;
+        font-size: 0.75rem;
+        color: var(--muted);
+        background: rgba(15, 23, 42, 0.8);
+      }
+
+      form {
+        display: grid;
+        gap: 1.1rem;
+      }
+
+      .question-card {
+        border-radius: 0.9rem;
+        padding: 1rem 1rem 0.9rem;
+        background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.98));
+        border: 1px solid rgba(31, 41, 55, 0.95);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.8);
+        position: relative;
+      }
+
+      .question-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 1rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .question-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+      }
+
+      .question-score-chip {
+        font-size: 0.75rem;
+        padding: 0.1rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        color: var(--muted);
+      }
+
+      .question-text {
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .muted-note {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-bottom: 0.35rem;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 5.5rem;
+        resize: vertical;
+        border-radius: 0.6rem;
+        border: 1px solid rgba(55, 65, 81, 0.9);
+        padding: 0.55rem 0.65rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 0.9rem;
+        background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.96), #020617);
+        color: var(--text);
+        outline: none;
+        box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.9);
+      }
+
+      textarea:focus {
+        border-color: rgba(56, 189, 248, 0.9);
+        box-shadow:
+          0 0 0 1px rgba(56, 189, 248, 0.9),
+          0 0 0 8px rgba(56, 189, 248, 0.15);
+      }
+
+      .question-footer {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+      }
+
+      .correct-tag,
+      .incorrect-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        border-radius: 999px;
+        padding: 0.15rem 0.6rem;
+        font-weight: 500;
+      }
+
+      .correct-tag {
+        color: var(--success);
+        border: 1px solid rgba(74, 222, 128, 0.6);
+        background: rgba(22, 163, 74, 0.09);
+      }
+
+      .incorrect-tag {
+        color: var(--danger);
+        border: 1px solid rgba(248, 113, 113, 0.7);
+        background: rgba(127, 29, 29, 0.1);
+      }
+
+      .feedback {
+        padding: 0.45rem 0.6rem;
+        border-radius: 0.65rem;
+        background: rgba(15, 23, 42, 0.95);
+        border: 1px solid rgba(55, 65, 81, 0.95);
+        color: var(--muted);
+        line-height: 1.4;
+      }
+
+      .feedback-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.15rem;
+      }
+
+      .form-footer {
+        margin-top: 1.4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .score-card {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem 1.5rem;
+        align-items: center;
+        border-radius: 0.9rem;
+        padding: 0.75rem 0.9rem;
+        background: radial-gradient(circle at top left, rgba(34, 197, 235, 0.12), rgba(17, 24, 39, 0.96));
+        border: 1px solid rgba(34, 197, 235, 0.55);
+      }
+
+      .score-main {
+        font-size: 1.15rem;
+        font-weight: 650;
+      }
+
+      .score-sub {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .score-pill {
+        padding: 0.15rem 0.7rem;
+        border-radius: 999px;
+        border: 1px solid rgba(56, 189, 248, 0.6);
+        font-size: 0.75rem;
+        color: var(--accent);
+        background: rgba(15, 23, 42, 0.98);
+      }
+
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .hint {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      button[type="submit"] {
+        border-radius: 999px;
+        border: none;
+        padding: 0.6rem 1.4rem;
+        font-size: 0.9rem;
+        font-weight: 550;
+        cursor: pointer;
+        background: radial-gradient(circle at top left, #38bdf8, #0ea5e9);
+        color: #0b1120;
+        box-shadow:
+          0 12px 35px rgba(56, 189, 248, 0.5),
+          0 0 0 1px rgba(8, 47, 73, 0.9);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      button[type="submit"]:hover {
+        transform: translateY(-1px);
+        box-shadow:
+          0 16px 40px rgba(56, 189, 248, 0.7),
+          0 0 0 1px rgba(8, 47, 73, 0.9);
+      }
+
+      button[type="submit"]:active {
+        transform: translateY(0);
+        box-shadow:
+          0 10px 25px rgba(56, 189, 248, 0.5),
+          0 0 0 1px rgba(8, 47, 73, 0.9);
+      }
+
+      @media (max-width: 720px) {
+        .shell-body {
+          padding: 1.4rem 1.1rem 1.25rem;
+        }
+
+        .headline {
+          font-size: 1.45rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="shell-header">
+        <div class="window-dots">
+          <span class="dot red"></span>
+          <span class="dot amber"></span>
+          <span class="dot green"></span>
+        </div>
+        <div class="shell-title">python_quiz.py — flask · qwen3-vl:235b-cloud</div>
+        <div class="badge">
+          <span class="badge-dot"></span>
+          AI feedback enabled
+        </div>
+      </div>
+      <div class="shell-body">
+        <div class="layout-header">
+          <div class="headline">
+            Python <span>Beginner Quiz</span>
+          </div>
+          <p class="subtitle">
+            Answer the short Python coding prompts. You can leave any question blank.
+            When you submit, your quiz is scored and
+            <strong>Qwen3‑VL 235B</strong> gives targeted feedback on each answer.
+          </p>
+          <div class="pill-row">
+            <span class="pill">8 questions</span>
+            <span class="pill">Auto-scored</span>
+            <span class="pill">Model: qwen3-vl:235b-cloud</span>
+          </div>
+        </div>
+
+        <form method="post" novalidate>
+          {% for q in questions %}
+          <section class="question-card">
+            <div class="question-meta">
+              <div>
+                <div class="question-label">Question {{ loop.index }}</div>
+                <div class="question-text">{{ q.prompt }}</div>
+              </div>
+              {% if percentage is not none %}
+              <div class="question-score-chip">
+                {% if correctness[loop.index0] %}
+                  Marked correct
+                {% elif user_answers[loop.index0]|default('', true) %}
+                  Marked incorrect
+                {% else %}
+                  Not answered
+                {% endif %}
+              </div>
+              {% endif %}
+            </div>
+
+            <p class="muted-note">
+              You can leave this blank if you're not sure. Answers are free‑form Python code or snippets.
+            </p>
+
+            <textarea
+              name="question_{{ q.id }}"
+              spellcheck="false"
+              placeholder="Type your Python answer here..."
+            >{{ user_answers[loop.index0] if user_answers|length > 0 else '' }}</textarea>
+
+            {% if percentage is not none %}
+            <footer class="question-footer">
+              {% if correctness[loop.index0] %}
+                <span class="correct-tag">✓ Looks correct</span>
+              {% elif user_answers[loop.index0]|default('', true) %}
+                <span class="incorrect-tag">✕ Needs work</span>
+              {% else %}
+                <span class="incorrect-tag">● Not answered</span>
+              {% endif %}
+
+              {% if feedback and feedback|length > loop.index0 %}
+              <div class="feedback">
+                <div class="feedback-label">Model feedback</div>
+                <div>{{ feedback[loop.index0] }}</div>
+              </div>
+              {% endif %}
+            </footer>
+            {% endif %}
+          </section>
+          {% endfor %}
+
+          <div class="form-footer">
+            {% if percentage is not none %}
+            <section class="score-card">
+              <div>
+                <div class="score-main">
+                  Score: {{ percentage }}%
+                </div>
+                <div class="score-sub">
+                  You answered {{ num_correct }}/{{ total_questions }} questions in a way that matched the expected solution.
+                </div>
+              </div>
+              <span class="score-pill">
+                {{ num_correct }} correct · {{ total_questions - num_correct }} to improve
+              </span>
+            </section>
+            {% endif %}
+
+            <div class="cta-row">
+              <p class="hint">
+                Submit any time — unanswered questions simply count as incorrect,
+                and the model will still explain how to solve them.
+              </p>
+              <button type="submit">
+                Run quiz &amp; get feedback
+                <span>↵</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
