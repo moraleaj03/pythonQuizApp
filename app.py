@@ -71,9 +71,17 @@ def get_model_feedback(questions: List[Dict[str, Any]], answers: List[str]) -> L
     prompt_lines = [
         "You are a friendly Python programming tutor.",
         "A student has just completed a short beginner Python quiz.",
-        "For each question, give short, constructive feedback (1-3 sentences)",
-        "on how their answer could be improved. If they left it blank or very",
-        "wrong, briefly explain a correct approach.",
+        "For each question, give short, constructive feedback (1–3 sentences).",
+        "",
+        "IMPORTANT BEHAVIOR:",
+        "- If the student wrote an answer, briefly say if their idea is on the right track and suggest 1–2 concrete improvements.",
+        "- If the student LEFT THE ANSWER BLANK (or wrote something like 'I don't know'),",
+        "  you MUST assume they are confused and do not know how to start.",
+        "  In that case, your feedback must focus ONLY on how to BEGIN the problem:",
+        "  * name the Python concept they should use first (e.g., print(), a for loop, defining a function, a list, try/except, etc.),",
+        "  * describe the first 1–2 steps they should take in plain language,",
+        "  * optionally show what the FIRST 1–2 lines of code might look like.",
+        "  Do NOT jump straight to the full final solution; stay at the level of a gentle starting hint.",
         "",
         "Respond ONLY with valid JSON in the following format (no markdown):",
         '{',
@@ -93,7 +101,10 @@ def get_model_feedback(questions: List[Dict[str, Any]], answers: List[str]) -> L
         if a and a.strip():
             prompt_lines.append(f"Student answer: {a}")
         else:
-            prompt_lines.append("Student answer: (left blank)")
+            # Make it explicit to the model that this user is stuck.
+            prompt_lines.append(
+                "Student answer: (left blank and seems confused about how to start)"
+            )
         prompt_lines.append("")
 
     full_prompt = "\n".join(prompt_lines)

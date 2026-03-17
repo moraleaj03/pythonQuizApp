@@ -47,37 +47,6 @@
         backdrop-filter: blur(18px);
       }
 
-      .shell-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.75rem 1rem;
-        background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.24), transparent 55%);
-        border-bottom: 1px solid rgba(148, 163, 184, 0.35);
-      }
-
-      .window-dots {
-        display: flex;
-        gap: 0.35rem;
-      }
-
-      .dot {
-        width: 0.7rem;
-        height: 0.7rem;
-        border-radius: 999px;
-      }
-
-      .dot.red { background: #f97373; }
-      .dot.amber { background: #facc15; }
-      .dot.green { background: #4ade80; }
-
-      .shell-title {
-        font-size: 0.8rem;
-        color: var(--muted);
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-      }
-
       .badge {
         padding: 0.25rem 0.6rem;
         border-radius: 999px;
@@ -351,18 +320,6 @@
   </head>
   <body>
     <div class="shell">
-      <div class="shell-header">
-        <div class="window-dots">
-          <span class="dot red"></span>
-          <span class="dot amber"></span>
-          <span class="dot green"></span>
-        </div>
-        <div class="shell-title">python_quiz.py — flask · qwen3-vl:235b-cloud</div>
-        <div class="badge">
-          <span class="badge-dot"></span>
-          AI feedback enabled
-        </div>
-      </div>
       <div class="shell-body">
         <div class="layout-header">
           <div class="headline">
@@ -377,8 +334,28 @@
             <span class="pill">8 questions</span>
             <span class="pill">Auto-scored</span>
             <span class="pill">Model: qwen3-vl:235b-cloud</span>
+            <span class="pill">
+              <span class="badge-dot"></span>
+              AI feedback enabled
+            </span>
           </div>
         </div>
+
+        {% if percentage is not none %}
+        <section class="score-card" style="margin-bottom: 1.3rem;">
+          <div>
+            <div class="score-main">
+              Score: {{ percentage }}%
+            </div>
+            <div class="score-sub">
+              You answered {{ num_correct }}/{{ total_questions }} questions in a way that matched the expected solution.
+            </div>
+          </div>
+          <span class="score-pill">
+            {{ num_correct }} correct · {{ total_questions - num_correct }} to improve
+          </span>
+        </section>
+        {% endif %}
 
         <form method="post" novalidate>
           {% for q in questions %}
@@ -433,22 +410,6 @@
           {% endfor %}
 
           <div class="form-footer">
-            {% if percentage is not none %}
-            <section class="score-card">
-              <div>
-                <div class="score-main">
-                  Score: {{ percentage }}%
-                </div>
-                <div class="score-sub">
-                  You answered {{ num_correct }}/{{ total_questions }} questions in a way that matched the expected solution.
-                </div>
-              </div>
-              <span class="score-pill">
-                {{ num_correct }} correct · {{ total_questions - num_correct }} to improve
-              </span>
-            </section>
-            {% endif %}
-
             <div class="cta-row">
               <p class="hint">
                 Submit any time — unanswered questions simply count as incorrect,
